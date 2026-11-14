@@ -1,0 +1,47 @@
+<dashboard version="1.1" theme="light">
+  <label>TA-service Overview</label>
+  <description>Collects systemd service health: total/active/failed unit counts and the list of failed units (with substate) via systemctl. Emits JSON events to index=main (sourcetype</description>
+  <row>
+    <panel>
+      <title>Hosts Reporting (latest)</title>
+      <table>
+        <search>
+          <query>index=main sourcetype="service:status"
+| stats latest(_time) as "Last seen", count as Reports by host
+| table host "Last seen" Reports</query>
+          <done/>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Distinct service.* Metrics (last hour)</title>
+      <single>
+        <search>
+          <query>| mcatalog values(metric_name) as m where index=metrics metric_name="service.*"
+| eval count=mvcount(m)</query>
+          <done/>
+        </search>
+        <option name="underLabel">service.* metrics streaming</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Issues (newest first)</title>
+      <table>
+        <search>
+          <query>index=main sourcetype="service:status" _raw="*alarm*"
+| sort - _time
+| table _time host _raw
+| rename _raw as Event
+| head 200</query>
+          <done/>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

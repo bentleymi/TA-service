@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "info": {
+    "title": "Systemd Service Health Add-on (failed units)",
+    "id": {
+      "group": null,
+      "name": "TA-service",
+      "version": "1.0.0"
+    },
+    "author": [{"name":"Michael \"JKat54\" Bentley","email":"michael@bentleypc.com","company":"BentleyPC LLC"}],
+    "releaseDate": "11/14/2026",
+    "description": "Collects systemd service health: total/active/failed unit counts and the list of failed units (with substate) via systemctl. Emits JSON events to index=main (sourcetype service:status) every 60s and service.* metrics to index=metrics (sourcetype service:metrics) - total, active, failed counts - with alarm status when any unit is in a failed state, plus dashboards.",
+    "classification": {
+      "intendedAudience": "IT",
+      "categories": ["IT Operations"],
+      "developmentStatus": "Production/Latest"
+    },
+    "commonInformationModels": null,
+    "license": {
+      "name": "Source Available - Free personal use, commercial use requires paid license from BentleyPC LLC",
+      "text": "LICENSE",
+      "uri": null
+    },
+    "privacyPolicy": {
+      "name": null,
+      "text": null,
+      "uri": null
+    },
+    "releaseNotes": {
+      "name": null,
+      "text": null,
+      "uri": null
+    }
+  },
+  "dependencies": null,
+  "tasks": null,
+  "inputGroups": null,
+  "incompatibleApps": null,
+  "platformRequirements": null,
+  "supportedDeployments": [
+    "_standalone",
+    "_distributed"
+  ],
+  "targetWorkloads": ["_search_heads", "_indexers"]
+}

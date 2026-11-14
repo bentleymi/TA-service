@@ -1,0 +1,54 @@
+TA-service
+====
+
+Collects systemd service health: total/active/failed unit counts and the list of failed units (with substate) via systemctl. Emits JSON events to index=main (sourcetype service:status) every 60s and service.* metrics to index=metrics (sourcetype service:metrics) - total, active, failed counts - with alarm status when any unit is in a failed state, plus dashboards.
+
+Prerequisites
+-------------
+  * systemd (the Splunk host must run systemd) - no extra packages
+  * Splunk Enterprise or Universal Forwarder 9.x - 10.6 (forwarder recommended
+    on monitored hosts).
+  * A metrics-typed index (default name: metrics) on the indexer:
+
+      [metrics]
+      datatype = metric
+
+    Forwarders only need that index to exist on the indexer side.
+  * No network egress, no root requirement beyond the Splunk service account.
+    Fully standalone add-on with no dependencies.
+
+Install
+-------
+Install on each monitored host (Apps > Install app from file, splunk install
+app, or deployment server), restart Splunk, then verify:
+
+  index=main sourcetype="service:status" | head
+
+Search quick reference
+----------------------
+  index=main sourcetype="service:status" | head
+  | mcatalog values(metric_name) where index=metrics metric_name="service.*" by host
+  | mstats avg("service.*") where index=metrics span=60s by host
+
+Usage
+-----
+Events: index=main sourcetype=service:status  (counts + failed unit names/substates)
+Metrics: service.total / service.active / service.failed on index=metrics
+Alarm status when >0 failed units.
+Dashboards: TA-Service > Service Overview / Service Metrics
+
+Configure
+---------
+Override the interval or destination index in etc/apps/TA-service/local/inputs.conf
+(never edit default/).
+
+Troubleshooting
+---------------
+  * Requires the Splunk service to be able to call systemctl (default as root).
+  * Timer/socket/scope types are excluded; only service units are counted.
+
+License
+-------
+SOURCE-AVAILABLE (see LICENSE) - free personal, educational and evaluation
+use; commercial or production use requires a paid license from BentleyPC
+LLC (https://www.bentleypc.com).
