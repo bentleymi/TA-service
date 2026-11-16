@@ -3,43 +3,54 @@
   <description>Collects systemd service health: total/active/failed unit counts and the list of failed units (with substate) via systemctl. Emits JSON events to index=main (sourcetype</description>
   <row>
     <panel>
-      <title>Hosts Reporting (latest)</title>
-      <table>
-        <search>
-          <query>index=main sourcetype="service:status"
-| stats latest(_time) as "Last seen", count as Reports by host
-| table host "Last seen" Reports</query>
-          <done/>
-        </search>
-        <option name="drilldown">none</option>
-      </table>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Distinct service.* Metrics (last hour)</title>
+      <title>Units (per host, latest)</title>
       <single>
         <search>
-          <query>| mcatalog values(metric_name) as m where index=metrics metric_name="service.*"
-| eval count=mvcount(m)</query>
+          <query>| mstats avg("service.units_total") as value where index=metrics span=5m
+| fields - _time | tail 1</query>
           <done/>
         </search>
-        <option name="underLabel">service.* metrics streaming</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Active units (per host, latest)</title>
+      <single>
+        <search>
+          <query>| mstats avg("service.active_count") as value where index=metrics span=5m
+| fields - _time | tail 1</query>
+          <done/>
+        </search>
+      </single>
+    </panel>
+    <panel>
+      <title>Failed units (fleet, latest)</title>
+      <single>
+        <search>
+          <query>index=main sourcetype="service:status"
+| eventstats latest(_time) as lt by host
+| dedup host lt
+| spath input=_raw output=f path=failed_units{}
+| mvexpand f
+| stats count(f) as value</query>
+          <done/>
+        </search>
       </single>
     </panel>
   </row>
   <row>
     <panel>
-      <title>Issues (newest first)</title>
+      <title>Failed units - latest per host</title>
       <table>
         <search>
-          <query>index=main sourcetype="service:status" _raw="*alarm*"
-| sort - _time
-| table _time host _raw
-| rename _raw as Event
-| head 200</query>
+          <query>index=main sourcetype="service:status"
+| dedup host
+| spath input=_raw output=x path=failed_units{}
+| mvexpand x
+| rename x as "unit"
+| table host "unit"</query>
           <done/>
         </search>
+        <option name="count">50</option>
         <option name="drilldown">none</option>
       </table>
     </panel>
