@@ -10,7 +10,7 @@ MAX_FAILED_UNITS = 50
 
 def run_units(state=None):
     """Return list-units lines as a list, or None if systemctl is unavailable."""
-    cmd = [SYSTEMCTL, "list-units", "--type=service", "--no-legend", "--no-pager", "--plain"]
+    cmd = [SYSTEMCTL, "list-units", "--type=service", "--all", "--no-legend", "--no-pager", "--plain"]
     if state:
         cmd.append("--state=" + state)
     try:

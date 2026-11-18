@@ -3,7 +3,7 @@
   <description>Collects systemd service health: total/active/failed unit counts and the list of failed units (with substate) via systemctl. Emits JSON events to index=main (sourcetype</description>
   <row>
     <panel>
-      <title>Units (per host, latest)</title>
+      <title>Units (fleet avg, latest)</title>
       <single>
         <search>
           <query>| mstats avg("service.units_total") as value where index=metrics span=5m
@@ -13,7 +13,7 @@
       </single>
     </panel>
     <panel>
-      <title>Active units (per host, latest)</title>
+      <title>Active units (fleet avg, latest)</title>
       <single>
         <search>
           <query>| mstats avg("service.active_count") as value where index=metrics span=5m
