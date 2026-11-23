@@ -7,12 +7,20 @@
       "name": "TA-service",
       "version": "1.0.2"
     },
-    "author": [{"name":"Michael \"JKat54\" Bentley","email":"michael@bentleypc.com","company":"BentleyPC LLC"}],
+    "author": [
+      {
+        "name": "Michael \"JKat54\" Bentley",
+        "email": "michael@bentleypc.com",
+        "company": "BentleyPC LLC"
+      }
+    ],
     "releaseDate": "11/16/2026",
     "description": "Collects systemd service health: total/active/failed unit counts and the list of failed units (with substate) via systemctl. Emits JSON events to index=main (sourcetype service:status) every 60s and service.* metrics to index=metrics (sourcetype service:metrics) - total, active, failed counts - with alarm status when any unit is in a failed state, plus dashboards.",
     "classification": {
       "intendedAudience": "IT",
-      "categories": ["IT Operations"],
+      "categories": [
+        "IT Operations"
+      ],
       "developmentStatus": "Production/Latest"
     },
     "commonInformationModels": null,
@@ -41,5 +49,9 @@
     "_standalone",
     "_distributed"
   ],
-  "targetWorkloads": ["_search_heads", "_indexers"]
+  "targetWorkloads": [
+    "_search_heads",
+    "_indexers"
+  ],
+  "version": "1.0.8"
 }
