@@ -3,5 +3,6 @@
     <view name="service_overview" />
     <view name="service_metrics" />
     <search label="TA-service Events" search="search index=main sourcetype=service:status" />
+    <view name="license" />
   </nav>
 </application>
